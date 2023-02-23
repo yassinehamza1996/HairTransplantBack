@@ -58,7 +58,7 @@ public class PersonalInformationController {
 		PersonalInformation updatedPersonalInformation = PersonalInformationRepository.save(personalInformation);
 		return ResponseEntity.ok(updatedPersonalInformation);
 	}
-
+	
 	@DeleteMapping("delete/{id}")
 	public ResponseEntity<PersonalInformation> deletePersonalInformation(@PathVariable(value = "id") Long id) {
 		PersonalInformation personalInformation = PersonalInformationRepository.findById(id).orElse(null);
@@ -66,6 +66,14 @@ public class PersonalInformationController {
 			return ResponseEntity.notFound().build();
 		}
 		PersonalInformationRepository.delete(personalInformation);
+		return ResponseEntity.ok().build();
+	}
+	@DeleteMapping("delete/all")
+	public ResponseEntity<?> deleteAllPersonalInformations(@RequestBody List<PersonalInformation> personalInformations) {
+		if (personalInformations.isEmpty()) {
+			return ResponseEntity.badRequest().body("List of personal informations is empty.");
+		}
+		PersonalInformationRepository.deleteAll(personalInformations);
 		return ResponseEntity.ok().build();
 	}
 }

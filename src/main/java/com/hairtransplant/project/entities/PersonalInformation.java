@@ -1,10 +1,17 @@
 package com.hairtransplant.project.entities;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -38,6 +45,11 @@ public class PersonalInformation {
 
 	@Column(name = "age")
 	private Integer age;
+	
+
+	@OneToMany(mappedBy = "personalInformation", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	private List<MedicalHistory> medicalHistoryList;
+	
 
 	public PersonalInformation() {
 	}
@@ -55,6 +67,33 @@ public class PersonalInformation {
 		this.phoneNumber = phoneNumber;
 		this.age = age;
 	}
+	
+
+	public PersonalInformation(Long id, String firstname, String lastname, String address, String email,
+			String phoneNumber, Integer age ,List<MedicalHistory> medicalHistoryList ) {
+		super();
+		this.id = id;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.address = address;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.age = age;
+		this.medicalHistoryList = medicalHistoryList;
+	}
+	
+	public List<MedicalHistory> getMedicalHistoryList() {
+		return medicalHistoryList;
+	}
+
+
+
+	public void setMedicalHistoryList(List<MedicalHistory> medicalHistoryList) {
+		this.medicalHistoryList = medicalHistoryList;
+	}
+
+
+
 
 
 
