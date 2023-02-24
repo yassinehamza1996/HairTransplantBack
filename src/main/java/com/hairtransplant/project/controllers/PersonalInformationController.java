@@ -1,6 +1,8 @@
 package com.hairtransplant.project.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.hairtransplant.project.repositories.PersonalInformationRepository;
+import com.hairtransplant.project.entities.MedicalHistory;
 import com.hairtransplant.project.entities.PersonalInformation;
 
 @RestController
@@ -26,7 +29,13 @@ public class PersonalInformationController {
 	public List<PersonalInformation> getAllPersonalInformations() {
 		return PersonalInformationRepository.findAll();
 	}
+	
 
+	@GetMapping("/count")
+	public Long getCountPersonalInformations() {
+		return PersonalInformationRepository.count();
+	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<PersonalInformation> getPersonalInformationById(@PathVariable(value = "id") Long id) {
 		PersonalInformation personalInformation = PersonalInformationRepository.findById(id).orElse(null);
@@ -38,7 +47,31 @@ public class PersonalInformationController {
 
 	@PostMapping("/save")
 	public PersonalInformation createPersonalInformation(@RequestBody PersonalInformation personalInformation) {
-		return PersonalInformationRepository.save(personalInformation);
+		PersonalInformation personalInformationResponse = null;
+		if(personalInformation.getId() == null) {
+			
+			PersonalInformation personaInformationEntity = new PersonalInformation();
+			personaInformationEntity.setFirstname(personalInformation.getFirstname());
+			personaInformationEntity.setLastname(personalInformation.getLastname());
+			personaInformationEntity.setAge(personalInformation.getAge());
+			personaInformationEntity.setAddress(personalInformation.getAddress());
+			personaInformationEntity.setEmail(personalInformation.getEmail());
+			personaInformationEntity.setPhoneNumber(personalInformation.getPhoneNumber());
+			personalInformationResponse =  PersonalInformationRepository.save(personaInformationEntity);
+			
+			if(personalInformation.getMedicalHistoryList().size() != 0) {
+				List<MedicalHistory> listOfMedicalHistories = new ArrayList<>();
+				for(MedicalHistory medicalHistory : personalInformation.getMedicalHistoryList()) {
+					if(medicalHistory.getPersonalInformation() == null) {
+						medicalHistory.setPersonalInformation(personalInformationResponse);
+					}
+					listOfMedicalHistories.add(medicalHistory);
+				}
+				personalInformationResponse.setMedicalHistoryList(listOfMedicalHistories);
+				personalInformationResponse =  PersonalInformationRepository.save(personalInformationResponse);
+			}
+		}
+		return personalInformationResponse;
 	}
 
 	@PutMapping("update/{id}")
@@ -54,7 +87,6 @@ public class PersonalInformationController {
 		personalInformation.setEmail(personalInformationDetails.getEmail());
 		personalInformation.setPhoneNumber(personalInformationDetails.getPhoneNumber());
 		personalInformation.setAge(personalInformationDetails.getAge());
-
 		PersonalInformation updatedPersonalInformation = PersonalInformationRepository.save(personalInformation);
 		return ResponseEntity.ok(updatedPersonalInformation);
 	}

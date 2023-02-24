@@ -1,8 +1,14 @@
 package com.hairtransplant.project.entities;
 
 import java.time.LocalDate;
+import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "medical_history")
@@ -22,6 +29,7 @@ public class MedicalHistory {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
+
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "personal_information_id")
@@ -40,14 +48,18 @@ public class MedicalHistory {
 	private String previousTransplants;
 
 	@Column(name = "date_dataEntry")
-	private LocalDate dateDataEntry;
+	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
+	private Date dateDataEntry;
+	@Transient
+	private String parent;
 
 	// constructor
 	public MedicalHistory() {
 	}
 
 	public MedicalHistory(Long id, PersonalInformation personalInformation, String preExistingConditions,
-			String currentMedications, String allergies, String previousTransplants, LocalDate dateDataEntry) {
+			String currentMedications, String allergies, String previousTransplants, Date dateDataEntry,
+			String parent) {
 		super();
 		this.id = id;
 		this.personalInformation = personalInformation;
@@ -56,15 +68,26 @@ public class MedicalHistory {
 		this.allergies = allergies;
 		this.previousTransplants = previousTransplants;
 		this.dateDataEntry = dateDataEntry;
+		this.parent = parent;
 	}
 
-	public LocalDate getdateDataEntry() {
+	public Date getDateDataEntry() {
 		return dateDataEntry;
 	}
 
-	public void setdateDataEntry(LocalDate dateDataEntry) {
+	public void setDateDataEntry(Date dateDataEntry) {
 		this.dateDataEntry = dateDataEntry;
 	}
+
+	public String getParent() {
+		return personalInformation.getId().toString();
+	}
+
+	public void setParent(String parent) {
+		this.parent = parent;
+	}
+
+	
 
 	// getters and setters
 	public Long getId() {

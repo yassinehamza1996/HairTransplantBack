@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hairtransplant.project.entities.MedicalHistory;
+import com.hairtransplant.project.entities.PersonalInformation;
 import com.hairtransplant.project.repositories.MedicalHistoryRepository;
 
 @RestController
@@ -27,7 +28,12 @@ public class MedicalHistoryController {
 	public List<MedicalHistory> getAllMedicalHistorys() {
 		return medicalHistoryRepository.findAll();
 	}
-
+	
+	@GetMapping("/count")
+	public Long getCountMedicalHistorys() {
+		return medicalHistoryRepository.count();
+	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<MedicalHistory> getMedicalHistoryById(@PathVariable(value = "id") Long id) {
 		MedicalHistory medicalHistory = medicalHistoryRepository.findById(id).orElse(null);
@@ -36,7 +42,6 @@ public class MedicalHistoryController {
 		}
 		return ResponseEntity.ok().body(medicalHistory);
 	}
-
 	@PostMapping("/save")
 	public MedicalHistory createMedicalHistory(@RequestBody MedicalHistory medicalHistory) {
 		return medicalHistoryRepository.save(medicalHistory);
@@ -53,7 +58,7 @@ public class MedicalHistoryController {
 		medicalHistory.setCurrentMedications(medicalHistoryDetails.getCurrentMedications());
 		medicalHistory.setAllergies(medicalHistoryDetails.getAllergies());
 		medicalHistory.setPreviousTransplants(medicalHistoryDetails.getPreviousTransplants());
-		medicalHistory.setdateDataEntry(medicalHistoryDetails.getdateDataEntry());
+		medicalHistory.setDateDataEntry(medicalHistoryDetails.getDateDataEntry());
 
 		MedicalHistory updatedMedicalHistory = medicalHistoryRepository.save(medicalHistory);
 		return ResponseEntity.ok(updatedMedicalHistory);
@@ -66,6 +71,14 @@ public class MedicalHistoryController {
 			return ResponseEntity.notFound().build();
 		}
 		medicalHistoryRepository.delete(medicalHistory);
+		return ResponseEntity.ok().build();
+	}
+	@DeleteMapping("delete/all")
+	public ResponseEntity<?> deleteAllmedicalHistory(@RequestBody List<MedicalHistory> medicalHistory) {
+		if (medicalHistory.isEmpty()) {
+			return ResponseEntity.badRequest().body("List of medical History is empty.");
+		}
+		medicalHistoryRepository.deleteAll(medicalHistory);
 		return ResponseEntity.ok().build();
 	}
 }
