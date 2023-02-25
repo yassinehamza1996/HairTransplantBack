@@ -1,6 +1,12 @@
 package com.hairtransplant.project.controllers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -70,6 +76,18 @@ public class PersonalInformationController {
 				personalInformationResponse.setMedicalHistoryList(listOfMedicalHistories);
 				personalInformationResponse =  PersonalInformationRepository.save(personalInformationResponse);
 			}
+		}else {
+			if(personalInformation.getMedicalHistoryList().size() != 0) {
+				List<MedicalHistory> listOfMedicalHistories = new ArrayList<>();
+				for(MedicalHistory medicalHistory : personalInformation.getMedicalHistoryList()) {
+					if(medicalHistory.getPersonalInformation() == null) {
+						medicalHistory.setPersonalInformation(personalInformation);
+					}
+					listOfMedicalHistories.add(medicalHistory);
+				}
+				personalInformation.setMedicalHistoryList(listOfMedicalHistories);
+			}
+			personalInformationResponse = PersonalInformationRepository.save(personalInformation);
 		}
 		return personalInformationResponse;
 	}
