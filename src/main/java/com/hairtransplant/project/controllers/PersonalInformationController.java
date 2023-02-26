@@ -40,41 +40,45 @@ public class PersonalInformationController {
 	public List<PersonalInformation> getAllPersonalInformations() {
 		return PersonalInformationRepository.findAll();
 	}
-	
+
+	@GetMapping("fetchwithidandmail/all")
+	public List<PersonalInformation> getAllPersonalInformationsIdMail() {
+		List<Object[]> results = PersonalInformationRepository.findAllIdAndEmail();
+		List<PersonalInformation> resultList = new ArrayList<>();
+		for (Object[] result : results) {
+			Long id = (Long) result[0];
+			String email = (String) result[1];
+			PersonalInformation pi = new PersonalInformation();
+			pi.setId(id);
+			pi.setEmail(email);
+			resultList.add(pi);
+		}
+		return resultList;
+	}
 
 	@GetMapping("/count")
 	public Long getCountPersonalInformations() {
 		return PersonalInformationRepository.count();
 	}
-	
+
 	@PostMapping("/export-to-excel")
-	public ResponseEntity<byte[]> exportPersonalInformationToExcel(@RequestBody List<PersonalInformation> personalInformationList) {
-	  try {
-	    byte[] excelBytes = PersonalInformationExcelService.exportPersonalInformationToExcel(personalInformationList);
-	    
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-	    headers.setContentDispositionFormData("attachment", "personal-information.xlsx");
-	    
-	    return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
-	  } catch (Exception e) {
-	    // handle any exceptions and return an appropriate HTTP status code and error message
-	  }
-	  return null;
+	public ResponseEntity<byte[]> exportPersonalInformationToExcel(
+			@RequestBody List<PersonalInformation> personalInformationList) {
+		try {
+			byte[] excelBytes = PersonalInformationExcelService
+					.exportPersonalInformationToExcel(personalInformationList);
+
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+			headers.setContentDispositionFormData("attachment", "personal-information.xlsx");
+
+			return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	@PostMapping("/personal-information")
-	public String savePersonalInformation(@RequestBody List<PersonalInformation> personalInformationList) {
-	    try {
-	        List<PersonalInformation> savedPersonalInformationList;
-	        return "Hello";
-	    } catch (Exception e) {
-	        // handle any exceptions and return an appropriate HTTP status code and error message
-	    }
-	    return "Hey";
-	}
-
-	
 	@GetMapping("/{id}")
 	public ResponseEntity<PersonalInformation> getPersonalInformationById(@PathVariable(value = "id") Long id) {
 		PersonalInformation personalInformation = PersonalInformationRepository.findById(id).orElse(null);
@@ -87,8 +91,8 @@ public class PersonalInformationController {
 	@PostMapping("/save")
 	public PersonalInformation createPersonalInformation(@RequestBody PersonalInformation personalInformation) {
 		PersonalInformation personalInformationResponse = null;
-		if(personalInformation.getId() == null) {
-			
+		if (personalInformation.getId() == null) {
+
 			PersonalInformation personaInformationEntity = new PersonalInformation();
 			personaInformationEntity.setFirstname(personalInformation.getFirstname());
 			personaInformationEntity.setLastname(personalInformation.getLastname());
@@ -96,24 +100,24 @@ public class PersonalInformationController {
 			personaInformationEntity.setAddress(personalInformation.getAddress());
 			personaInformationEntity.setEmail(personalInformation.getEmail());
 			personaInformationEntity.setPhoneNumber(personalInformation.getPhoneNumber());
-			personalInformationResponse =  PersonalInformationRepository.save(personaInformationEntity);
-			
-			if(personalInformation.getMedicalHistoryList().size() != 0) {
+			personalInformationResponse = PersonalInformationRepository.save(personaInformationEntity);
+
+			if (personalInformation.getMedicalHistoryList().size() != 0) {
 				List<MedicalHistory> listOfMedicalHistories = new ArrayList<>();
-				for(MedicalHistory medicalHistory : personalInformation.getMedicalHistoryList()) {
-					if(medicalHistory.getPersonalInformation() == null) {
+				for (MedicalHistory medicalHistory : personalInformation.getMedicalHistoryList()) {
+					if (medicalHistory.getPersonalInformation() == null) {
 						medicalHistory.setPersonalInformation(personalInformationResponse);
 					}
 					listOfMedicalHistories.add(medicalHistory);
 				}
 				personalInformationResponse.setMedicalHistoryList(listOfMedicalHistories);
-				personalInformationResponse =  PersonalInformationRepository.save(personalInformationResponse);
+				personalInformationResponse = PersonalInformationRepository.save(personalInformationResponse);
 			}
-		}else {
-			if(personalInformation.getMedicalHistoryList().size() != 0) {
+		} else {
+			if (personalInformation.getMedicalHistoryList().size() != 0) {
 				List<MedicalHistory> listOfMedicalHistories = new ArrayList<>();
-				for(MedicalHistory medicalHistory : personalInformation.getMedicalHistoryList()) {
-					if(medicalHistory.getPersonalInformation() == null) {
+				for (MedicalHistory medicalHistory : personalInformation.getMedicalHistoryList()) {
+					if (medicalHistory.getPersonalInformation() == null) {
 						medicalHistory.setPersonalInformation(personalInformation);
 					}
 					listOfMedicalHistories.add(medicalHistory);
@@ -141,7 +145,7 @@ public class PersonalInformationController {
 		PersonalInformation updatedPersonalInformation = PersonalInformationRepository.save(personalInformation);
 		return ResponseEntity.ok(updatedPersonalInformation);
 	}
-	
+
 	@DeleteMapping("delete/{id}")
 	public ResponseEntity<PersonalInformation> deletePersonalInformation(@PathVariable(value = "id") Long id) {
 		PersonalInformation personalInformation = PersonalInformationRepository.findById(id).orElse(null);
@@ -151,18 +155,20 @@ public class PersonalInformationController {
 		PersonalInformationRepository.delete(personalInformation);
 		return ResponseEntity.ok().build();
 	}
+
 	@DeleteMapping("delete/all")
-	public ResponseEntity<?> deleteAllPersonalInformations(@RequestBody List<PersonalInformation> personalInformations) {
+	public ResponseEntity<?> deleteAllPersonalInformations(
+			@RequestBody List<PersonalInformation> personalInformations) {
 		if (personalInformations.isEmpty()) {
 			return ResponseEntity.badRequest().body("List of personal informations is empty.");
 		}
 		PersonalInformationRepository.deleteAll(personalInformations);
 		return ResponseEntity.ok().build();
 	}
-	
+
 	@PostMapping("/import-excel")
 	public List<PersonalInformation> importExcel(@RequestBody byte[] data) throws Exception {
-	    return PersonalInformationExcelService.importExcelFile(data);
+		return PersonalInformationExcelService.importExcelFile(data);
 	}
 
 }

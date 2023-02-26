@@ -70,7 +70,21 @@ public class MedicalHistory {
 		this.dateDataEntry = dateDataEntry;
 		this.parent = parent;
 	}
-
+	
+	public MedicalHistory(Long id, PersonalInformation personalInformation, String preExistingConditions,
+			String currentMedications, String allergies, String previousTransplants, Date dateDataEntry,
+			PersonalInformation parent) {
+		super();
+		this.id = id;
+		this.personalInformation = personalInformation;
+		this.preExistingConditions = preExistingConditions;
+		this.currentMedications = currentMedications;
+		this.allergies = allergies;
+		this.previousTransplants = previousTransplants;
+		this.dateDataEntry = dateDataEntry;
+		this.personalInformation = parent;
+	}
+	
 	public Date getDateDataEntry() {
 		return dateDataEntry;
 	}
@@ -79,10 +93,12 @@ public class MedicalHistory {
 		this.dateDataEntry = dateDataEntry;
 	}
 
-	public String getParent() {
+	public String getIdParent() {
 		return personalInformation.getId().toString();
 	}
-
+	public String getStringParent() {
+		return parent;
+	}
 	public void setParent(String parent) {
 		this.parent = parent;
 	}
