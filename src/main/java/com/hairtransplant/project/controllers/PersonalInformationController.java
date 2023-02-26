@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +22,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.hairtransplant.project.repositories.PersonalInformationRepository;
+import com.hairtransplant.project.services.PersonalInformationExcelService;
 import com.hairtransplant.project.entities.MedicalHistory;
 import com.hairtransplant.project.entities.PersonalInformation;
 
@@ -41,6 +46,34 @@ public class PersonalInformationController {
 	public Long getCountPersonalInformations() {
 		return PersonalInformationRepository.count();
 	}
+	
+	@PostMapping("/export-to-excel")
+	public ResponseEntity<byte[]> exportPersonalInformationToExcel(@RequestBody List<PersonalInformation> personalInformationList) {
+	  try {
+	    byte[] excelBytes = PersonalInformationExcelService.exportPersonalInformationToExcel(personalInformationList);
+	    
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+	    headers.setContentDispositionFormData("attachment", "personal-information.xlsx");
+	    
+	    return new ResponseEntity<>(excelBytes, headers, HttpStatus.OK);
+	  } catch (Exception e) {
+	    // handle any exceptions and return an appropriate HTTP status code and error message
+	  }
+	  return null;
+	}
+
+	@PostMapping("/personal-information")
+	public String savePersonalInformation(@RequestBody List<PersonalInformation> personalInformationList) {
+	    try {
+	        List<PersonalInformation> savedPersonalInformationList;
+	        return "Hello";
+	    } catch (Exception e) {
+	        // handle any exceptions and return an appropriate HTTP status code and error message
+	    }
+	    return "Hey";
+	}
+
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<PersonalInformation> getPersonalInformationById(@PathVariable(value = "id") Long id) {
@@ -126,4 +159,10 @@ public class PersonalInformationController {
 		PersonalInformationRepository.deleteAll(personalInformations);
 		return ResponseEntity.ok().build();
 	}
+	
+	@PostMapping("/import-excel")
+	public List<PersonalInformation> importExcel(@RequestBody byte[] data) throws Exception {
+	    return PersonalInformationExcelService.importExcelFile(data);
+	}
+
 }
