@@ -20,7 +20,6 @@ import com.hairtransplant.project.entities.MedicalHistory;
 import com.hairtransplant.project.entities.PersonalInformation;
 import com.hairtransplant.project.repositories.MedicalHistoryRepository;
 import com.hairtransplant.project.services.MedicalHistoryExcelService;
-import com.hairtransplant.project.services.PersonalInformationExcelService;
 import com.hairtransplant.project.repositories.PersonalInformationRepository;
 
 @RestController

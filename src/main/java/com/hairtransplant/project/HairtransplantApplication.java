@@ -9,6 +9,7 @@ public class HairtransplantApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(HairtransplantApplication.class, args);
+		/* System.setProperty("server.servlet.context-path", "/hair"); */
 	}
 
 }

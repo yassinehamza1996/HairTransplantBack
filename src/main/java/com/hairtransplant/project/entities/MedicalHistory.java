@@ -49,6 +49,7 @@ public class MedicalHistory {
 
 	@Column(name = "date_dataEntry")
 	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
+	
 	private Date dateDataEntry;
 	@Transient
 	private String parent;
