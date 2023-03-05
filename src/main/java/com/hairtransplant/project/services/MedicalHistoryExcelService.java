@@ -20,10 +20,11 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import com.hairtransplant.project.entities.MedicalHistory;
+import com.hairtransplant.project.entities.PersonalInformation;
 
 
 public class MedicalHistoryExcelService {
-	public static byte[] exportPersonalInformationToExcel(List<MedicalHistory> medicalHistoryList)
+	public static byte[] exportMedicalHistory(List<MedicalHistory> medicalHistoryList)
 			throws IOException {
 		try (Workbook workbook = new XSSFWorkbook();
 				ByteArrayOutputStream outputStream = new ByteArrayOutputStream();) {
@@ -37,7 +38,8 @@ public class MedicalHistoryExcelService {
 			headerRow.createCell(3).setCellValue("PreExisting Conditions");
 			headerRow.createCell(4).setCellValue("Previous Transplants");
 			headerRow.createCell(5).setCellValue("Date Data Entry");
-
+			headerRow.createCell(6).setCellValue("Personal Information ID");
+			
 			CellStyle style = workbook.createCellStyle();
 			style.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
 			style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
@@ -60,6 +62,7 @@ public class MedicalHistoryExcelService {
 				row.createCell(3).setCellValue(medicalHistory.getPreExistingConditions());
 				row.createCell(4).setCellValue(medicalHistory.getPreviousTransplants());
 				row.createCell(5).setCellValue(medicalHistory.getDateDataEntry());
+				row.createCell(6).setCellValue(medicalHistory.getStringParent());
 			}
 
 			// Auto size columns
@@ -88,8 +91,8 @@ public class MedicalHistoryExcelService {
 	                continue;
 	            }
 
-	            // Create a new PersonalInformation object from the row data
-	            MedicalHistory pi = new MedicalHistory();
+	            // Create a new MedicalHistory object from the row data
+	            MedicalHistory mh = new MedicalHistory();
 	            String value = getStringValue(row.getCell(0));
 	            Long id;
 	            try {
@@ -99,14 +102,23 @@ public class MedicalHistoryExcelService {
 	                id = null; // set a default value or return null
 	            }
 	            
-	            pi.setId(id);
-	            pi.setAllergies(getStringValue(row.getCell(1)));
-	            pi.setCurrentMedications(getStringValue(row.getCell(2)));
-	            pi.setPreExistingConditions(getStringValue(row.getCell(3)));
-	            pi.setPreviousTransplants(getStringValue(row.getCell(4)));
-	            pi.setDateDataEntry(getDateValue(row.getCell(5)));
-
-	            result.add(pi);
+	            mh.setId(id);
+	            mh.setAllergies(getStringValue(row.getCell(1)));
+	            mh.setCurrentMedications(getStringValue(row.getCell(2)));
+	            mh.setPreExistingConditions(getStringValue(row.getCell(3)));
+	            mh.setPreviousTransplants(getStringValue(row.getCell(4)));
+	            mh.setDateDataEntry(getStringValue(row.getCell(5)));
+	            PersonalInformation pi = null;
+	            if(getStringValue(row.getCell(6)) != null) {
+	            	pi = new PersonalInformation();
+	            	double doubleVal = Double.parseDouble(getStringValue(row.getCell(6)));
+	            	pi.setId((long) doubleVal);
+	            }
+	            if(pi != null) {
+	            	mh.setPersonalInformation(pi);	            	
+	            }
+	            
+	            result.add(mh);
 	        }
 
 	        // Close the workbook and byte array input stream

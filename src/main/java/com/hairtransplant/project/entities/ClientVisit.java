@@ -32,13 +32,13 @@ public class ClientVisit {
 	private String salesManager;
 
 	@Column(name = "visit_date")
-	private LocalDate visitDate;
+	private String visitDate;
 
 	public ClientVisit() {
 	}
 
 	public ClientVisit(Long id, PersonalInformation personalInformation, String salesperson, String salesManager,
-			LocalDate visitDate) {
+			String visitDate) {
 		super();
 		this.id = id;
 		this.personalInformation = personalInformation;
@@ -79,11 +79,11 @@ public class ClientVisit {
 		this.salesManager = salesManager;
 	}
 
-	public LocalDate getVisitDate() {
+	public String getVisitDate() {
 		return visitDate;
 	}
 
-	public void setVisitDate(LocalDate visitDate) {
+	public void setVisitDate(String visitDate) {
 		this.visitDate = visitDate;
 	}
 

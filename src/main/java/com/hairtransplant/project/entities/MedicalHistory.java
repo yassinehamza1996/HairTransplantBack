@@ -1,14 +1,9 @@
 package com.hairtransplant.project.entities;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,10 +42,8 @@ public class MedicalHistory {
 	@Column(name = "previous_transplants")
 	private String previousTransplants;
 
-	@Column(name = "date_dataEntry")
-	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
-	
-	private Date dateDataEntry;
+	@Column(name = "date_dataEntry")	
+	private String dateDataEntry;
 	@Transient
 	private String parent;
 
@@ -59,7 +52,7 @@ public class MedicalHistory {
 	}
 
 	public MedicalHistory(Long id, PersonalInformation personalInformation, String preExistingConditions,
-			String currentMedications, String allergies, String previousTransplants, Date dateDataEntry,
+			String currentMedications, String allergies, String previousTransplants, String dateDataEntry,
 			String parent) {
 		super();
 		this.id = id;
@@ -73,7 +66,7 @@ public class MedicalHistory {
 	}
 	
 	public MedicalHistory(Long id, PersonalInformation personalInformation, String preExistingConditions,
-			String currentMedications, String allergies, String previousTransplants, Date dateDataEntry,
+			String currentMedications, String allergies, String previousTransplants, String dateDataEntry,
 			PersonalInformation parent) {
 		super();
 		this.id = id;
@@ -86,11 +79,11 @@ public class MedicalHistory {
 		this.personalInformation = parent;
 	}
 	
-	public Date getDateDataEntry() {
+	public String getDateDataEntry() {
 		return dateDataEntry;
 	}
 
-	public void setDateDataEntry(Date dateDataEntry) {
+	public void setDateDataEntry(String dateDataEntry) {
 		this.dateDataEntry = dateDataEntry;
 	}
 

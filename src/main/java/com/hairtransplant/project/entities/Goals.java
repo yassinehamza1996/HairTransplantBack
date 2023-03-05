@@ -36,13 +36,13 @@ public class Goals {
 	private int budget;
 
 	@Column(name = "date_dataEntry")
-	private LocalDate dateDataEntry;
+	private String dateDataEntry;
 
 	public Goals() {
 	}
 
 	public Goals(Long id, PersonalInformation personalInformation, String expectations, String outcome, int budget,
-			LocalDate dateDataEntry) {
+			String dateDataEntry) {
 		super();
 		this.id = id;
 		this.personalInformation = personalInformation;
@@ -92,11 +92,11 @@ public class Goals {
 		this.budget = budget;
 	}
 
-	public LocalDate getDateDataEntry() {
+	public String getDateDataEntry() {
 		return dateDataEntry;
 	}
 
-	public void setDateDataEntry(LocalDate dateDataEntry) {
+	public void setDateDataEntry(String dateDataEntry) {
 		this.dateDataEntry = dateDataEntry;
 	}
 

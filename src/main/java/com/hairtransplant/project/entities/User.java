@@ -24,13 +24,13 @@ public class User {
 	private String role;
 
 	@Column(name = "last_login")
-	private LocalDate lastLogin;
+	private String lastLogin;
 
 	private String permissions;
 	
 	public User() {}
 	
-	public User(Long id, String username, String password, String role, LocalDate lastLogin, String permissions) {
+	public User(Long id, String username, String password, String role, String lastLogin, String permissions) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -72,11 +72,11 @@ public class User {
 		this.role = role;
 	}
 
-	public LocalDate getLastLogin() {
+	public String getLastLogin() {
 		return lastLogin;
 	}
 
-	public void setLastLogin(LocalDate lastLogin) {
+	public void setLastLogin(String lastLogin) {
 		this.lastLogin = lastLogin;
 	}
 

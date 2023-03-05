@@ -72,7 +72,7 @@ public class MedicalHistoryController {
 		medicalHistory.setAllergies(medicalHistoryDetails.getAllergies());
 		medicalHistory.setPreviousTransplants(medicalHistoryDetails.getPreviousTransplants());
 		medicalHistory.setDateDataEntry(medicalHistoryDetails.getDateDataEntry());
-
+		medicalHistory.setParent(medicalHistoryDetails.getStringParent());
 		MedicalHistory updatedMedicalHistory = medicalHistoryRepository.save(medicalHistory);
 		return ResponseEntity.ok(updatedMedicalHistory);
 	}
@@ -97,13 +97,15 @@ public class MedicalHistoryController {
 	
 	@PostMapping("/import-excel")
 	public List<MedicalHistory> importExcel(@RequestBody byte[] data) throws Exception {
-	    return MedicalHistoryExcelService.importExcelFile(data);
+	    List<MedicalHistory> l =  MedicalHistoryExcelService.importExcelFile(data);
+	    System.out.println(l.get(0).getPersonalInformation().toString());
+	    return l;
 	}
 	
 	@PostMapping("/export-to-excel")
 	public ResponseEntity<byte[]> exportPersonalInformationToExcel(@RequestBody List<MedicalHistory> medicalHistoryList) {
 	  try {
-	    byte[] excelBytes = MedicalHistoryExcelService.exportPersonalInformationToExcel(medicalHistoryList);
+	    byte[] excelBytes = MedicalHistoryExcelService.exportMedicalHistory(medicalHistoryList);
 	    
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
