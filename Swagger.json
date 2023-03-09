@@ -6,7 +6,7 @@
     "version" : "1.0.0"
   },
   "servers" : [ {
-    "url" : "http://localhost:8090",
+    "url" : "http://localhost:8080",
     "description" : "Generated server url"
   } ],
   "paths" : {
@@ -385,6 +385,103 @@
         }
       }
     },
+    "/api/lifeStyleController/import-excel" : {
+      "post" : {
+        "tags" : [ "life-style-controller" ],
+        "operationId" : "importExcel_1",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "short" : {
+                    "type" : "integer",
+                    "format" : "int32"
+                  },
+                  "char" : {
+                    "type" : "string"
+                  },
+                  "int" : {
+                    "type" : "integer",
+                    "format" : "int32"
+                  },
+                  "long" : {
+                    "type" : "integer",
+                    "format" : "int64"
+                  },
+                  "float" : {
+                    "type" : "number",
+                    "format" : "float"
+                  },
+                  "double" : {
+                    "type" : "number",
+                    "format" : "double"
+                  },
+                  "direct" : {
+                    "type" : "boolean"
+                  },
+                  "readOnly" : {
+                    "type" : "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/LifeStyle"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lifeStyleController/export-to-excel" : {
+      "post" : {
+        "tags" : [ "life-style-controller" ],
+        "operationId" : "exportLifeStyleToExcel",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/LifeStyle"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string",
+                    "format" : "byte"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/hairLossController/save" : {
       "post" : {
         "tags" : [ "hair-loss-controller" ],
@@ -500,7 +597,7 @@
     "/api/PersonalInformations/import-excel" : {
       "post" : {
         "tags" : [ "personal-information-controller" ],
-        "operationId" : "importExcel_1",
+        "operationId" : "importExcel_2",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -1044,6 +1141,37 @@
         }
       }
     },
+    "/api/lifeStyleController/delete/all" : {
+      "delete" : {
+        "tags" : [ "life-style-controller" ],
+        "operationId" : "deleteSelectedLifeStyles",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/LifeStyle"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/hairLossController/delete/{id}" : {
       "delete" : {
         "tags" : [ "hair-loss-controller" ],
@@ -1206,8 +1334,7 @@
             "type" : "string"
           },
           "dateDataEntry" : {
-            "type" : "string",
-            "format" : "date-time"
+            "type" : "string"
           },
           "parent" : {
             "type" : "string",
@@ -1228,9 +1355,6 @@
             "type" : "integer",
             "format" : "int64"
           },
-          "personalInformation" : {
-            "$ref" : "#/components/schemas/PersonalInformation"
-          },
           "diet" : {
             "type" : "string"
           },
@@ -1246,8 +1370,41 @@
             "enum" : [ "YES", "NO" ]
           },
           "dateDataEntry" : {
+            "type" : "string"
+          },
+          "parent" : {
             "type" : "string",
-            "format" : "date"
+            "writeOnly" : true
+          },
+          "stringParent" : {
+            "type" : "string"
+          },
+          "idParent" : {
+            "type" : "string"
+          }
+        }
+      },
+      "HairLoss" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "personalInformation" : {
+            "$ref" : "#/components/schemas/PersonalInformation"
+          },
+          "cause" : {
+            "type" : "string"
+          },
+          "extent" : {
+            "type" : "string"
+          },
+          "pattern" : {
+            "type" : "string"
+          },
+          "dateDataEntry" : {
+            "type" : "string"
           }
         }
       },
@@ -1285,31 +1442,6 @@
           }
         }
       },
-      "HairLoss" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "personalInformation" : {
-            "$ref" : "#/components/schemas/PersonalInformation"
-          },
-          "cause" : {
-            "type" : "string"
-          },
-          "extent" : {
-            "type" : "string"
-          },
-          "pattern" : {
-            "type" : "string"
-          },
-          "dateDataEntry" : {
-            "type" : "string",
-            "format" : "date"
-          }
-        }
-      },
       "Goals" : {
         "type" : "object",
         "properties" : {
@@ -1331,8 +1463,7 @@
             "format" : "int32"
           },
           "dateDataEntry" : {
-            "type" : "string",
-            "format" : "date"
+            "type" : "string"
           }
         }
       },
@@ -1353,8 +1484,7 @@
             "type" : "string"
           },
           "visitDate" : {
-            "type" : "string",
-            "format" : "date"
+            "type" : "string"
           }
         }
       }

@@ -2,6 +2,7 @@ package com.hairtransplant.project.entities;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hairtransplant.project.enums.YesNoEnum;
 
 import jakarta.persistence.Column;
@@ -25,9 +26,10 @@ public class LifeStyle {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
-
+	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "personal_information_id")
+	@JsonIgnore
 	private PersonalInformation personalInformation;
 
 	@Column(name = "diet", columnDefinition = "text")
@@ -120,7 +122,10 @@ public class LifeStyle {
 		this.tobacco = tobacco;
 	}
 
-	public String getParent() {
+	public String getIdParent() {
+		return personalInformation.getId().toString();
+	}
+	public String getStringParent() {
 		return parent;
 	}
 
@@ -128,7 +133,5 @@ public class LifeStyle {
 		this.parent = parent;
 	}
 
-	public String getIdParent() {
-		return personalInformation.getId().toString();
-	}
+
 }
