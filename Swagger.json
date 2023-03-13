@@ -510,6 +510,103 @@
         }
       }
     },
+    "/api/hairLossController/import-excel" : {
+      "post" : {
+        "tags" : [ "hair-loss-controller" ],
+        "operationId" : "importExcel_2",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "short" : {
+                    "type" : "integer",
+                    "format" : "int32"
+                  },
+                  "char" : {
+                    "type" : "string"
+                  },
+                  "int" : {
+                    "type" : "integer",
+                    "format" : "int32"
+                  },
+                  "long" : {
+                    "type" : "integer",
+                    "format" : "int64"
+                  },
+                  "float" : {
+                    "type" : "number",
+                    "format" : "float"
+                  },
+                  "double" : {
+                    "type" : "number",
+                    "format" : "double"
+                  },
+                  "direct" : {
+                    "type" : "boolean"
+                  },
+                  "readOnly" : {
+                    "type" : "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/HairLoss"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/hairLossController/export-to-excel" : {
+      "post" : {
+        "tags" : [ "hair-loss-controller" ],
+        "operationId" : "exportLifeStyleToExcel_1",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/HairLoss"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string",
+                    "format" : "byte"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/goalsController/save" : {
       "post" : {
         "tags" : [ "goals-controller" ],
@@ -597,7 +694,7 @@
     "/api/PersonalInformations/import-excel" : {
       "post" : {
         "tags" : [ "personal-information-controller" ],
-        "operationId" : "importExcel_2",
+        "operationId" : "importExcel_3",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -824,6 +921,25 @@
         }
       }
     },
+    "/api/lifeStyleController/count" : {
+      "get" : {
+        "tags" : [ "life-style-controller" ],
+        "operationId" : "getCount",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "integer",
+                  "format" : "int64"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/hairLossController/{id}" : {
       "get" : {
         "tags" : [ "hair-loss-controller" ],
@@ -865,6 +981,25 @@
                   "items" : {
                     "$ref" : "#/components/schemas/HairLoss"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/hairLossController/count" : {
+      "get" : {
+        "tags" : [ "hair-loss-controller" ],
+        "operationId" : "getCount_1",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "integer",
+                  "format" : "int64"
                 }
               }
             }
@@ -1199,6 +1334,37 @@
         }
       }
     },
+    "/api/hairLossController/delete/all" : {
+      "delete" : {
+        "tags" : [ "hair-loss-controller" ],
+        "operationId" : "deleteSelectedHairLoss",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/HairLoss"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/goalsController/delete/{id}" : {
       "delete" : {
         "tags" : [ "goals-controller" ],
@@ -1391,9 +1557,6 @@
             "type" : "integer",
             "format" : "int64"
           },
-          "personalInformation" : {
-            "$ref" : "#/components/schemas/PersonalInformation"
-          },
           "cause" : {
             "type" : "string"
           },
@@ -1402,6 +1565,41 @@
           },
           "pattern" : {
             "type" : "string"
+          },
+          "dateDataEntry" : {
+            "type" : "string"
+          },
+          "parent" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "stringParent" : {
+            "type" : "string"
+          },
+          "idParent" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Goals" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "personalInformation" : {
+            "$ref" : "#/components/schemas/PersonalInformation"
+          },
+          "expectations" : {
+            "type" : "string"
+          },
+          "outcome" : {
+            "type" : "string"
+          },
+          "budget" : {
+            "type" : "integer",
+            "format" : "int32"
           },
           "dateDataEntry" : {
             "type" : "string"
@@ -1439,31 +1637,6 @@
             "items" : {
               "$ref" : "#/components/schemas/MedicalHistory"
             }
-          }
-        }
-      },
-      "Goals" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "personalInformation" : {
-            "$ref" : "#/components/schemas/PersonalInformation"
-          },
-          "expectations" : {
-            "type" : "string"
-          },
-          "outcome" : {
-            "type" : "string"
-          },
-          "budget" : {
-            "type" : "integer",
-            "format" : "int32"
-          },
-          "dateDataEntry" : {
-            "type" : "string"
           }
         }
       },

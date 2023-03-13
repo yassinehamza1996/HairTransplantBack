@@ -1,6 +1,5 @@
 package com.hairtransplant.project.entities;
 
-import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.hairtransplant.project.enums.YesNoEnum;

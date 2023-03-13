@@ -1,6 +1,5 @@
 package com.hairtransplant.project.entities;
 
-import java.time.LocalDate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

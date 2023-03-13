@@ -17,13 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hairtransplant.project.entities.LifeStyle;
-import com.hairtransplant.project.entities.MedicalHistory;
 import com.hairtransplant.project.entities.PersonalInformation;
 import com.hairtransplant.project.repositories.LifeStyleRepository;
 import com.hairtransplant.project.repositories.PersonalInformationRepository;
-import com.hairtransplant.project.services.GenericExporterExcelService;
 import com.hairtransplant.project.services.LifeStyleExporterExcelService;
-import com.hairtransplant.project.services.MedicalHistoryExcelService;
 
 @RestController
 @RequestMapping("/api/lifeStyleController")
@@ -47,7 +44,13 @@ public class LifeStyleController {
 		}
 		return ResponseEntity.ok().body(lifeStyle);
 	}
-
+	
+	@GetMapping("/count")
+	public Long getCount() {
+		Long numberOfRows = lifeStyleRepository.count();
+		return numberOfRows;
+	}
+	
 	@PostMapping("/save")
 	public LifeStyle createLifeStyle(@RequestBody LifeStyle lifeStyle) {
 		Long parentId = Long.parseLong(lifeStyle.getStringParent());

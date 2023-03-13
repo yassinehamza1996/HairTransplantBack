@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -152,19 +151,6 @@ public class LifeStyleExporterExcelService {
 		    }
 		}
 
-	    private static Integer getIntegerValue(Cell cell) {
-	        if (cell == null) {
-	            return null;
-	        }
-
-	        return (int) cell.getNumericCellValue();
-	    }
-	    private static Date getDateValue(Cell cell) {
-	        if (cell == null) {
-	            return null;
-	        }
-
-	        return (Date) cell.getDateCellValue();
-	    }
+	   
 	    
 }
