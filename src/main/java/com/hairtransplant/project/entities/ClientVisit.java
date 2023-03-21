@@ -1,6 +1,8 @@
 package com.hairtransplant.project.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "client_visit")
@@ -19,7 +22,8 @@ public class ClientVisit {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
-
+	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "personal_information_id")
 	private PersonalInformation personalInformation;
@@ -33,6 +37,26 @@ public class ClientVisit {
 	@Column(name = "visit_date")
 	private String visitDate;
 
+	@Column(name = "date_dataEntry")
+	private String dateDataEntry;
+		
+	
+	
+	@Transient
+	private String parent;
+	
+	public String getIdParent() {
+		return personalInformation.getId().toString();
+	}
+	
+	public String getStringParent() {
+		return parent;
+	}
+
+	public void setParent(String parent) {
+		this.parent = parent;
+	}
+	
 	public ClientVisit() {
 	}
 

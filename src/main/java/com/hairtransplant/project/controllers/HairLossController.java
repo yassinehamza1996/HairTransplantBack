@@ -105,7 +105,7 @@ public class HairLossController {
 	}
 	
 	@PostMapping("/export-to-excel")
-	public ResponseEntity<byte[]> exportLifeStyleToExcel(@RequestBody List<HairLoss> hairLossList) {
+	public ResponseEntity<byte[]> exportHairLossToExcel(@RequestBody List<HairLoss> hairLossList) {
 	  try {
 	    byte[] excelBytes = HiarLossExporterExcelService.exportHairLoss(hairLossList);
 	    

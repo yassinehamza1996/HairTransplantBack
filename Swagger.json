@@ -575,7 +575,7 @@
     "/api/hairLossController/export-to-excel" : {
       "post" : {
         "tags" : [ "hair-loss-controller" ],
-        "operationId" : "exportLifeStyleToExcel_1",
+        "operationId" : "exportHairLossToExcel",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -628,6 +628,103 @@
               "*/*" : {
                 "schema" : {
                   "$ref" : "#/components/schemas/Goals"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/goalsController/import-excel" : {
+      "post" : {
+        "tags" : [ "goals-controller" ],
+        "operationId" : "importExcel_3",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "properties" : {
+                  "short" : {
+                    "type" : "integer",
+                    "format" : "int32"
+                  },
+                  "char" : {
+                    "type" : "string"
+                  },
+                  "int" : {
+                    "type" : "integer",
+                    "format" : "int32"
+                  },
+                  "long" : {
+                    "type" : "integer",
+                    "format" : "int64"
+                  },
+                  "float" : {
+                    "type" : "number",
+                    "format" : "float"
+                  },
+                  "double" : {
+                    "type" : "number",
+                    "format" : "double"
+                  },
+                  "direct" : {
+                    "type" : "boolean"
+                  },
+                  "readOnly" : {
+                    "type" : "boolean"
+                  }
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/Goals"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/goalsController/export-to-excel" : {
+      "post" : {
+        "tags" : [ "goals-controller" ],
+        "operationId" : "exportGoalsToExcel",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/Goals"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string",
+                    "format" : "byte"
+                  }
                 }
               }
             }
@@ -694,7 +791,7 @@
     "/api/PersonalInformations/import-excel" : {
       "post" : {
         "tags" : [ "personal-information-controller" ],
-        "operationId" : "importExcel_3",
+        "operationId" : "importExcel_4",
         "requestBody" : {
           "content" : {
             "application/json" : {
@@ -1055,6 +1152,25 @@
         }
       }
     },
+    "/api/goalsController/count" : {
+      "get" : {
+        "tags" : [ "goals-controller" ],
+        "operationId" : "getCount_2",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "integer",
+                  "format" : "int64"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/clientVisitController/{id}" : {
       "get" : {
         "tags" : [ "client-visit-controller" ],
@@ -1392,6 +1508,37 @@
         }
       }
     },
+    "/api/goalsController/delete/all" : {
+      "delete" : {
+        "tags" : [ "goals-controller" ],
+        "operationId" : "deleteSelectedGoals",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/components/schemas/Goals"
+                }
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/clientVisitController/delete/{id}" : {
       "delete" : {
         "tags" : [ "client-visit-controller" ],
@@ -1588,9 +1735,6 @@
             "type" : "integer",
             "format" : "int64"
           },
-          "personalInformation" : {
-            "$ref" : "#/components/schemas/PersonalInformation"
-          },
           "expectations" : {
             "type" : "string"
           },
@@ -1602,6 +1746,47 @@
             "format" : "int32"
           },
           "dateDataEntry" : {
+            "type" : "string"
+          },
+          "parent" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "stringParent" : {
+            "type" : "string"
+          },
+          "idParent" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ClientVisit" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "personalInformation" : {
+            "$ref" : "#/components/schemas/PersonalInformation"
+          },
+          "salesperson" : {
+            "type" : "string"
+          },
+          "salesManager" : {
+            "type" : "string"
+          },
+          "visitDate" : {
+            "type" : "string"
+          },
+          "parent" : {
+            "type" : "string",
+            "writeOnly" : true
+          },
+          "stringParent" : {
+            "type" : "string"
+          },
+          "idParent" : {
             "type" : "string"
           }
         }
@@ -1637,27 +1822,6 @@
             "items" : {
               "$ref" : "#/components/schemas/MedicalHistory"
             }
-          }
-        }
-      },
-      "ClientVisit" : {
-        "type" : "object",
-        "properties" : {
-          "id" : {
-            "type" : "integer",
-            "format" : "int64"
-          },
-          "personalInformation" : {
-            "$ref" : "#/components/schemas/PersonalInformation"
-          },
-          "salesperson" : {
-            "type" : "string"
-          },
-          "salesManager" : {
-            "type" : "string"
-          },
-          "visitDate" : {
-            "type" : "string"
           }
         }
       }
